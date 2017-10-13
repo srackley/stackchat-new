@@ -4,16 +4,14 @@ import { connect } from 'react-redux';
 
 
 export function ChannelList(props) {
-  const channels = props.channels;
   const messages = props.messages;
-
     return (
       <ul>
       {
-        channels.map(channel => (
+        props.channels.map(channel => (
           <li key={channel.id}>
           <NavLink to={channel.name} activeClassName="active">
-            <span>{channel.name} HELLO</span>
+            <span>{channel.name}</span>
             <span className="badge">{ messages.filter(message => message.channelId === channel.id).length }</span>
           </NavLink>
         </li>
