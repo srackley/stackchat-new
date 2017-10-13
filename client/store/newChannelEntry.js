@@ -1,9 +1,7 @@
-import axios from 'axios';
-import socket from '../socket';
 
 const WRITE_CHANNEL_NAME = 'WRITE_CHANNEL_NAME';
 
-export function writeChannelName (channel) {
+export function writeChannelName(channel) {
   const action = { type: WRITE_CHANNEL_NAME, channel };
   return action;
 }

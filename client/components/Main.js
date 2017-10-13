@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import MessagesList from './MessagesList';
@@ -7,15 +7,14 @@ import NewChannelEntry from './NewChannelEntry';
 import store, { fetchMessages, fetchChannels } from '../store';
 
 export default class Main extends Component {
-
-  componentDidMount () {
+  componentDidMount() {
     const messagesThunk = fetchMessages();
     const channelsThunk = fetchChannels();
     store.dispatch(messagesThunk);
     store.dispatch(channelsThunk);
   }
 
-  render () {
+  render() {
     return (
       <div>
         <Sidebar />
@@ -24,7 +23,6 @@ export default class Main extends Component {
           <Switch>
             <Route path="/new-channel" component={NewChannelEntry} />
             <Route path="/channels/:channelId" component={MessagesList} />
-
           </Switch>
         </main>
       </div>

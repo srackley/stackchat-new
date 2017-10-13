@@ -1,9 +1,7 @@
-import axios from 'axios';
-import socket from '../socket';
 
 const WRITE_MESSAGE = 'WRITE_MESSAGE';
 
-export function writeMessage (content) {
+export function writeMessage(content) {
   const action = { type: WRITE_MESSAGE, content };
   return action;
 }

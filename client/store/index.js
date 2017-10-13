@@ -1,7 +1,7 @@
 import {
   createStore,
   applyMiddleware,
-  combineReducers
+  combineReducers,
 } from 'redux';
 
 
@@ -21,15 +21,15 @@ const reducer = combineReducers({
   channels,
   name,
   newChannelEntry,
-  newMessageEntry
+  newMessageEntry,
 });
 
 const store = createStore(
   reducer,
   composeWithDevTools(applyMiddleware(
     thunkMiddleware,
-    createLogger()
-  ))
+    createLogger(),
+  )),
 );
 
 export default store;

@@ -4,24 +4,22 @@ import NewMessageEntry from './NewMessageEntry';
 import store from '../store';
 
 export default class Messages extends Component {
-
-  constructor () {
+  constructor() {
     super();
     this.state = store.getState();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.unsubscribe = store.subscribe(() => this.setState(store.getState()));
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.unsubscribe();
   }
 
-  render () {
-
+  render() {
     const channelId = Number(this.props.match.params.channelId); // because it's a string "1", not a number!
-    const messages = this.state.messages;
+    const { messages } = this.state.messages;
     const filteredMessages = messages.filter(message => message.channelId === channelId);
 
     return (
