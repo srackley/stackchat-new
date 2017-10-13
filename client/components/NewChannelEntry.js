@@ -18,11 +18,11 @@ export function NewChannelEntry (props) {
 
 /** Write your `connect` component below! **/
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return { newChannel: state.newChannel }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return { handleChange (event) {
     const action = writeChannelName(event.target.value);
     dispatch(action);
@@ -30,7 +30,8 @@ function mapDispatchToProps(dispatch) {
     handleSubmit(event) {
       event.preventDefault();
       const name = event.target.channelName.value;
-      dispatch(postChannel({name}));
+      dispatch(postChannel({name}, ownProps.history));
+      dispatch(writeChannelName(''));
     }
 
 }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ChannelList from './ChannelList';
 
 export default class Sidebar extends Component {
-
   render () {
     return (
       <sidebar>

@@ -1,20 +1,12 @@
 import axios from 'axios';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import socket from './socket';
+import reducers from './store/reducers';
 
-
-// INITIAL STATE
-
-const initialState = {
-  messages: [],
-  name: 'Reggie',
-  newMessageEntry: '',
-  channels: [],
-  newChannel: ''
-};
+const reducer = combineReducers({reducers});
 
 // ACTION TYPES
 
@@ -105,7 +97,7 @@ export function fetchChannels () {
   }
 }
 
-export function postChannel (channel) {
+export function postChannel (channel, history) {
 
   return function thunk (dispatch) {
     return axios.post('/api/channels', channel)
@@ -114,6 +106,7 @@ export function postChannel (channel) {
         const action = getChannel(newChannel);
         dispatch(action);
         socket.emit('new-channel', newChannel);
+        history.push(`/channels/${newChannel.id}`);
       });
   }
 
@@ -143,57 +136,8 @@ export function postChannel (channel) {
  * Note: this is still an experimental language feature (though it is on its way to becoming official).
  * We can use it now because we are using a special babel plugin with webpack (babel-preset-stage-2)!
  */
-function reducer (state = initialState, action) {
 
-  switch (action.type) {
 
-    case UPDATE_NAME:
-      return {
-        ...state,
-        name: action.name
-      };
-
-    case GET_MESSAGES:
-      return {
-        ...state,
-        messages: action.messages
-      };
-
-    case GET_MESSAGE:
-      return {
-        ...state,
-        messages: [...state.messages, action.message]
-      };
-
-    case WRITE_MESSAGE:
-      return {
-        ...state,
-        newMessageEntry: action.content
-      };
-
-    case GET_CHANNELS:
-      return {
-        ...state,
-        channels: [...state.channels, ...action.channels]
-      };
-
-    case WRITE_CHANNEL_NAME:
-      return {
-        ...state,
-        newChannel: action.channel
-      };
-
-    case GET_CHANNEL:
-      return {
-        ...state,
-        channels: [...state.channels, action.channel]
-      };
-
-    default:
-      return state;
-  }
-
-}
 
 const store = createStore(
   reducer,
