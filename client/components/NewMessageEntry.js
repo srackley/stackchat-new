@@ -1,49 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import store, { postMessage, writeMessage } from '../store';
 
-export default class NewMessageEntry extends Component {
-
-  constructor () {
-    super();
-    this.state = store.getState();
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount () {
-    this.unsubscribe = store.subscribe(() => this.setState(store.getState()));
-  }
-
-  componentWillUnmount () {
-    this.unsubscribe();
-  }
-
-  handleChange (evt) {
-    store.dispatch(writeMessage(evt.target.value))
-  }
-
-  handleSubmit (evt) {
-    evt.preventDefault();
-
-    const { name, newMessageEntry } = this.state;
-    const content = newMessageEntry;
-    const { channelId } = this.props;
-
-    store.dispatch(postMessage({ name, content, channelId }));
-    store.dispatch(writeMessage(''));
-  }
-
-  render () {
+export function NewMessageEntry (props) {
     return (
-      <form id="new-message-form" onSubmit={this.handleSubmit}>
+      <form id="new-message-form" onSubmit={props.handleSubmit}>
         <div className="input-group input-group-lg">
           <input
             className="form-control"
             type="text"
             name="content"
-            value={this.state.newMessageEntry}
-            onChange={this.handleChange}
+            value={props.newMessage}
+            onChange={props.handleChange}
             placeholder="Say something nice..."
           />
           <span className="input-group-btn">
@@ -52,5 +20,26 @@ export default class NewMessageEntry extends Component {
         </div>
       </form>
     );
-  }
 }
+
+function mapStateToProps(state, ownProps) {
+  return { newMessage: state.newMessage }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  return { handleChange (event) {
+    const action = writeMessage(event.target.value);
+    dispatch(action);
+  },
+    handleSubmit(event) {
+      event.preventDefault();
+      const name = event.target.content.value;
+      dispatch(postMessage({name}, ownProps.history));
+      dispatch(writeMessage(''));
+    }
+
+}
+}
+
+const newMessageContainer = connect(mapStateToProps, mapDispatchToProps)(NewMessageEntry);
+export default newMessageContainer;
