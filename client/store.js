@@ -5,12 +5,15 @@ import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import socket from './socket';
 
+
 // INITIAL STATE
 
 const initialState = {
   messages: [],
   name: 'Reggie',
-  newMessageEntry: ''
+  newMessageEntry: '',
+  channels: [],
+  newChannel: ''
 };
 
 // ACTION TYPES
@@ -19,6 +22,9 @@ const UPDATE_NAME = 'UPDATE_NAME';
 const GET_MESSAGE = 'GET_MESSAGE';
 const GET_MESSAGES = 'GET_MESSAGES';
 const WRITE_MESSAGE = 'WRITE_MESSAGE';
+const GET_CHANNELS = 'GET_CHANNELS';
+const ADD_CHANNEL = 'ADD_CHANNEL';
+const GET_CHANNEL = 'GET_CHANNEL';
 
 // ACTION CREATORS
 
@@ -41,6 +47,24 @@ export function writeMessage (content) {
   const action = { type: WRITE_MESSAGE, content };
   return action;
 }
+
+export function getChannels (channels) {
+  const action = { type: GET_CHANNELS, channels };
+  return action;
+}
+
+export function addChannel (channel) {
+  console.log("new channel?", this.state.newChannel);
+  const action = { type: ADD_CHANNEL, channel };
+  return action;
+}
+
+export function getChannel (channel) {
+  const action = { type: GET_CHANNEL, channel };
+  return action;
+}
+
+
 
 // THUNK CREATORS
 
@@ -65,6 +89,32 @@ export function postMessage (message) {
         const action = getMessage(newMessage);
         dispatch(action);
         socket.emit('new-message', newMessage);
+      });
+  }
+
+}
+
+export function fetchChannels () {
+
+  return function thunk (dispatch) {
+    return axios.get('/api/channels')
+      .then(res => res.data)
+      .then(channels => {
+        const action = getChannels(channels);
+        dispatch(action);
+      });
+  }
+}
+
+export function writeChannel (channel) {
+
+  return function thunk (dispatch) {
+    return axios.post('/api/channels', channel)
+      .then(res => res.data)
+      .then(newChannel => {
+        const action = getChannel(newChannel);
+        dispatch(action);
+        socket.emit('new-channel', newChannel);
       });
   }
 
@@ -120,6 +170,24 @@ function reducer (state = initialState, action) {
       return {
         ...state,
         newMessageEntry: action.content
+      };
+
+    case GET_CHANNELS:
+      return {
+        ...state,
+        channels: [...state.channels, action.channels]
+      };
+
+    case ADD_CHANNEL:
+      return {
+        ...state,
+        newChannel: action.channel
+      };
+
+    case GET_CHANNEL:
+      return {
+        ...state,
+        channels: [...state.channels, action.channel]
       };
 
     default:

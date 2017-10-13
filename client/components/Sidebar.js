@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ChannelList from './ChannelList';
+import NewChannelEntry from './NewChannelEntry';
 
 export default class Sidebar extends Component {
 
@@ -9,12 +10,12 @@ export default class Sidebar extends Component {
         <div className="sidebar-header">
           <h3 href="#">
             <div>Stack Chat</div>
-            <i alt="Brand" className="glyphicon glyphicon-comment">
-            </i>
+            <i alt="Brand" className="glyphicon glyphicon-comment" />
           </h3>
         </div>
         <h5>Channels</h5>
         <ChannelList />
+        <NewChannelEntry />
       </sidebar>
     );
   }
